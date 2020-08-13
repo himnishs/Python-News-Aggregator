@@ -18,5 +18,6 @@ from django.urls import path
 from Covid_News import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admin/', views.index, name = "home"),
+    path('', views.index, name = "home"),
+  
 ]

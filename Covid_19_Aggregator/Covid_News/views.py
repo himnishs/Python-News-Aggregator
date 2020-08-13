@@ -8,24 +8,17 @@ from bs4 import BeautifulSoup
 cbs_r = requests.get("https://www.cbsnews.com/feature/coronavirus/")
 cbs_soup = BeautifulSoup(cbs_r.content, 'html5lib')
 cbs_newsDivs = cbs_soup.findAll("h4", {"class": "item__hed"})
-count_cbs = 0
 cbs_news = []
-for n in cbs_newsDivs:
-    if(count_cbs < 25):
-        cbs_news.append(n.text)
-    count_cbs += 1
-
+for n in cbs_newsDivs[:10]:
+    cbs_news.append(n.text)
 
 #Getting Covid-News from Fox
 fox_r = requests.get("https://www.foxnews.com/category/health/infectious-disease/coronavirus")
 fox_soup = BeautifulSoup(fox_r.content, 'html5lib')
 fox_newsDivs = fox_soup.findAll("h4", {"class": "title"})
-count_fox = 0
 fox_news = []
-for n in fox_newsDivs:
-    if(count_fox < 25):
-        fox_news.append(n.text)
-    count_fox += 1
+for n in fox_newsDivs[1:11]:
+    fox_news.append(n.text)
 
 #Getting Covid-News from NBC
 nbc_r = requests.get("https://www.nbcnews.com/health/coronavirus")
@@ -34,12 +27,12 @@ newsDivs_nbc = nbc_soup.select("a.vilynx_disabled")
 count_nbc = 0
 nbc_news = []
 
-for n in newsDivs_nbc:
+for n in newsDivs_nbc[2:20]:
     if "tease-card__picture-link" in n["class"]:
         continue
     if "pancake__tease-picture-link" in n["class"]:
        continue
-    if(n.text == "Coronavirus"):
+    if(n.text == "Coronavirus" or n.text == "coronavirus"):
         continue
     if(n.text == "Opinion"):
         continue
@@ -49,12 +42,8 @@ for n in newsDivs_nbc:
         continue
     if(n.text == ""):
         continue
-    if(count_nbc < 25):
-        nbc_news.append(n.text)
-    count_nbc += 1
+    nbc_news.append(n.text)
  
-
-
 def index(req):
-    return render(req, 'new/index.html', {"cbs_news": cbs_news, "fox_news":fox_news})
+    return render(req, 'Covid_News/index.html', {"cbs_news": cbs_news, "fox_news":fox_news, "nbc_news": nbc_news})
 
